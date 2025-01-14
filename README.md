@@ -8,6 +8,13 @@ This paper presents a comparison of different growth laws implemented in the FEn
 
 To run this program you need to install dolfinx. Please see [dolfinx installation instructions](https://github.com/FEniCS/dolfinx?tab=readme-ov-file#installation) for details.
 
+If you have dolfinx installed, you can install the required dependencies by running
+
+```bash
+python3 -m pip install . 
+```
+in the root directory of this repository.
+
 To ease the process we also provide a docker image with dolfinx installed as well as the code for the paper. To run the docker image, first build the image
 
 You can get this docker image by running 
