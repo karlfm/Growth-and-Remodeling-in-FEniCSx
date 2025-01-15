@@ -41,7 +41,7 @@ vector_space_KOM, u_KOM, v_KOM = ddf.get_vector_functions(mesh_KOM)
 '''Boundary Conditions'''
 #Dirichlet
 x_left_x  = (lambda x : np.isclose(x[0], x_min), 0, dolfinx.default_scalar_type(0))
-x_right_x = (lambda x : np.isclose(x[0], x_max), 0, dolfinx.default_scalar_type(0.1))   # change this to -0.1 if you want compression
+x_right_x = (lambda x : np.isclose(x[0], x_max), 0, dolfinx.default_scalar_type(0.1))   # set to +/-0.1 if you want stretch/compression
 y_left_y  = (lambda x : np.isclose(x[1], y_min), 1, dolfinx.default_scalar_type(0))
 y_right_y = (lambda x : np.isclose(x[1], y_max), 1, dolfinx.default_scalar_type(0))
 z_left_z  = (lambda x : np.isclose(x[2], z_min), 2, dolfinx.default_scalar_type(0))
@@ -190,6 +190,17 @@ lists_to_write = {
 
 pp.write_lists_to_file("simulation_results_comparison.txt", lists_to_write)
 
+# Color blind friendly palette
+COLORS = ['#E69F00',  # orange
+          '#56B4E9',  # sky blue
+          '#009E73',  # bluish green
+          '#DBD200',  # darker yellow
+          '#0072B2']  # blue
+
+# Different line styles
+LINE_STYLES = ['-', '--', ':', '-.', (0, (3, 1, 1, 1))]
+
+# Save data to JSON
 data_to_save = {
     "data_lists": [
         [F_g_f_tot_LT2, F_g_f_tot_KFR, F_g_f_tot_GEG, F_g_f_tot_GCG, F_g_f_tot_KOM],
@@ -200,6 +211,7 @@ data_to_save = {
     "titles": ['Growth in fiber direction', 'Growth in crossfiber direction', 'Stretch in fiber direction', 'Stretch in crossfiber direction'],
     "ylabels": ['Distance', 'Distance', 'Stretch ratio', 'Stretch ratio']
 }
+
 with open("../Plots/10p_stretch_crossfiber.json", "w") as f:
     json.dump(data_to_save, f)
 
@@ -211,27 +223,68 @@ data_lists = loaded_data["data_lists"]
 titles = loaded_data["titles"]
 ylabels = loaded_data["ylabels"]
 
+plt.style.use('bmh')
+plt.rcParams.update({
+    'font.size': 16,
+    'axes.labelsize': 20,
+    'axes.titlesize': 24,
+    'xtick.labelsize': 16,
+    'ytick.labelsize': 16,
+    'legend.fontsize': 18,
+    'figure.titlesize': 24,
+    'axes.grid': True,
+    'grid.alpha': 0.3,
+    'axes.titleweight': 'bold'
+})
+
 # Create figure with GridSpec
 fig = plt.figure(figsize=(16, 16))
-gs = gridspec.GridSpec(2, 2)
+gs = gridspec.GridSpec(2, 2, figure=fig)
 axes = []
 
+# Plot each subplot
 for i in range(4):
-    ax = pp.make_plot(fig, gs, i, data_lists[i], titles[i], ylabels[i], time)
+    ax = fig.add_subplot(gs[i])
+    
+    # Plot each line with different color and style
+    for j, data in enumerate(data_lists[i]):
+        ax.plot(time, data, color=COLORS[j], linestyle=LINE_STYLES[j], 
+                linewidth=3.5,
+                label=['LT2', 'KFR', 'GEG', 'GCG', 'KOM'][j])
+    
+    # Customize subplot
+    ax.set_title(titles[i], pad=20, weight='bold')
+    ax.set_ylabel(ylabels[i])
+    ax.set_xlabel('Time')
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    
+    ax.set_facecolor('#f8f8f8')  # Light grey background
+    
     axes.append(ax)
 
-# Adjust layout
 plt.tight_layout()
 
-# Create a single legend for all subplots
-lines = axes[0].get_lines()
-fig.legend(lines, ['LT2', 'KFR', 'GEG', 'GCG', 'KOM'],
-            loc='lower center', bbox_to_anchor=(0.5, 0.02), ncol=5, fontsize=18)
+legend = fig.legend(['LT2', 'KFR', 'GEG', 'GCG', 'KOM'],
+                   loc='lower center', 
+                   bbox_to_anchor=(0.5, 0.02),
+                   ncol=5,
+                   fontsize=20,
+                   frameon=True,
+                   edgecolor='black',
+                   borderpad=1,
+                   columnspacing=1.5)
 
-plt.subplots_adjust(bottom=0.1)
+# Add more space at the bottom for the legend
+plt.subplots_adjust(bottom=0.15)
 
 # Save the figure
-plt.savefig('../Plots/10p_stretch_crossfiber.png', dpi=300, bbox_inches='tight')
+plt.savefig('../Plots/10p_stretch_crossfiber.png', 
+            dpi=300,
+            bbox_inches='tight',
+            bbox_extra_artists=[legend])
+
 plt.close()
 
-print("Plot saved as 10p_stretch_crossfiber.png")
+print("Plot saved")
