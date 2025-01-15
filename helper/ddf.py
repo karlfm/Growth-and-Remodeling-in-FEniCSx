@@ -6,9 +6,11 @@ import basix
 
 def eval_expression(expr, mesh, point = [0.5, 0.5, 0.5]):
     # Determine what process owns a point and what cells it lies within
+    #breakpoint()
     arg1=np.array(point, dtype=np.float64)
-    _, _, owning_points, cells  = dolfinx.cpp.geometry.determine_point_ownership(
-        mesh._cpp_object, arg1 , 1e-6)  # The last input value is normally 1e-6 sometimes i put it at 1e1``
+    res = dolfinx.cpp.geometry.determine_point_ownership(mesh._cpp_object, arg1 , 1e-6)  # The last input value is normally 1e-6 sometimes I put it at 1e1``
+    owning_points = res.dest_points
+    cells = res.dest_cells
     owning_points = np.asarray(owning_points).reshape(-1, 3)
 
     # Pull owning points back to reference cell
