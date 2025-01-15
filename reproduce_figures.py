@@ -331,6 +331,19 @@ def main(output: Path = Path("Plots"), N: int = 2000, number_of_days: int = 20):
 
     pp.write_lists_to_file("simulation_results_comparison.txt", lists_to_write)
 
+    # Color blind friendly palette
+    COLORS = [
+        "#E69F00",  # orange
+        "#56B4E9",  # sky blue
+        "#009E73",  # bluish green
+        "#DBD200",  # darker yellow
+        "#0072B2",
+    ]  # blue
+
+    # Different line styles
+    LINE_STYLES = ["-", "--", ":", "-.", (0, (3, 1, 1, 1))]
+
+    # Save data to JSON
     data_to_save = {
         "data_lists": [
             [F_g_f_tot_LT2, F_g_f_tot_KFR, F_g_f_tot_GEG, F_g_f_tot_GCG, F_g_f_tot_KOM],
@@ -346,11 +359,10 @@ def main(output: Path = Path("Plots"), N: int = 2000, number_of_days: int = 20):
         ],
         "ylabels": ["Distance", "Distance", "Stretch ratio", "Stretch ratio"],
     }
-    output.mkdir(parents=True, exist_ok=True)
+    output.mkdir(exist_ok=True, parents=True)
 
     with open(output / "10p_stretch_crossfiber.json", "w") as f:
         json.dump(data_to_save, f)
-    print("Data saved as 10p_stretch_crossfiber.json")
 
     # Load data from JSON file
     with open(output / "10p_stretch_crossfiber.json", "r") as f:
@@ -360,36 +372,82 @@ def main(output: Path = Path("Plots"), N: int = 2000, number_of_days: int = 20):
     titles = loaded_data["titles"]
     ylabels = loaded_data["ylabels"]
 
+    plt.style.use("bmh")
+    plt.rcParams.update(
+        {
+            "font.size": 16,
+            "axes.labelsize": 20,
+            "axes.titlesize": 24,
+            "xtick.labelsize": 16,
+            "ytick.labelsize": 16,
+            "legend.fontsize": 18,
+            "figure.titlesize": 24,
+            "axes.grid": True,
+            "grid.alpha": 0.3,
+            "axes.titleweight": "bold",
+        }
+    )
+
     # Create figure with GridSpec
     fig = plt.figure(figsize=(16, 16))
-    gs = gridspec.GridSpec(2, 2)
+    gs = gridspec.GridSpec(2, 2, figure=fig)
     axes = []
 
+    # Plot each subplot
     for i in range(4):
-        ax = pp.make_plot(fig, gs, i, data_lists[i], titles[i], ylabels[i], time)
+        ax = fig.add_subplot(gs[i])
+
+        # Plot each line with different color and style
+        for j, data in enumerate(data_lists[i]):
+            ax.plot(
+                time,
+                data,
+                color=COLORS[j],
+                linestyle=LINE_STYLES[j],
+                linewidth=3.5,
+                label=["LT2", "KFR", "GEG", "GCG", "KOM"][j],
+            )
+
+        # Customize subplot
+        ax.set_title(titles[i], pad=20, weight="bold")
+        ax.set_ylabel(ylabels[i])
+        ax.set_xlabel("Time")
+        ax.grid(True, linestyle="--", alpha=0.5)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+
+        ax.set_facecolor("#f8f8f8")  # Light grey background
+
         axes.append(ax)
 
-    # Adjust layout
     plt.tight_layout()
 
-    # Create a single legend for all subplots
-    lines = axes[0].get_lines()
-    fig.legend(
-        lines,
+    legend = fig.legend(
         ["LT2", "KFR", "GEG", "GCG", "KOM"],
         loc="lower center",
         bbox_to_anchor=(0.5, 0.02),
         ncol=5,
-        fontsize=18,
+        fontsize=20,
+        frameon=True,
+        edgecolor="black",
+        borderpad=1,
+        columnspacing=1.5,
     )
 
-    plt.subplots_adjust(bottom=0.1)
+    # Add more space at the bottom for the legend
+    plt.subplots_adjust(bottom=0.15)
 
     # Save the figure
-    plt.savefig(output / "10p_stretch_crossfiber.png", dpi=300, bbox_inches="tight")
+    plt.savefig(
+        output / "10p_stretch_crossfiber.png",
+        dpi=300,
+        bbox_inches="tight",
+        bbox_extra_artists=[legend],
+    )
+
     plt.close()
 
-    print("Plot saved as 10p_stretch_crossfiber.png")
+    print("Plot saved")
 
 
 if __name__ == "__main__":
