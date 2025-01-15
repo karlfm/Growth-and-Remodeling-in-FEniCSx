@@ -38,7 +38,7 @@ To reproduce the result in the paper you can run
 python3 reproduce_figures.py
 ```
 
-to reproduce the plots in the paper. See the `GrowthLaws/` directory for more examples.
+to reproduce the plots in the paper. See the [`examples/`](examples) directory for more examples.
 
 
 ## Citing
