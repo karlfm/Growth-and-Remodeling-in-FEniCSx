@@ -44,8 +44,20 @@ to reproduce the plots in the paper. See the [`examples/`](examples) directory f
 ## Citing
 If you use this code in your research, please cite the paper as follows:
 
-```
-TBD
+```bibtex
+@Inbook{Munthe2026,
+    author="Munthe, Karl and Finsberg, Henrik N. T. and Wall, Samuel T. and Sundnes, Joakim",
+    editor="Dokken, J{\o}rgen S. and Finsberg, Henrik N. and Hale, Jack S. and Rognes, Marie E. and Scroggs, Matthew W.",
+    title="Growth and Remodelling Package in FEniCSx",
+    bookTitle="The FEniCS Project: The FEniCS 2024 Conference",
+    year="2026",
+    publisher="Springer Nature Switzerland",
+    address="Cham",
+    pages="51--61",
+    isbn="978-3-032-17396-6",
+    doi="10.1007/978-3-032-17396-6_5",
+    url="https://doi.org/10.1007/978-3-032-17396-6_5"
+}
 ```
 
 ## License

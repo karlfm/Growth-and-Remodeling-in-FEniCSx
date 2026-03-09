@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Munthe"
+    given-names: "Karl"
+  - family-names: "Finsberg"
+    given-names: "Henrik"
+    orcid: "https://orcid.org/0000-0003-3766-2393"
+  - family-names: "Wall"
+    given-names: "Samuel T."
+  - family-names: "Sundnes"
+    given-names: "Joakim"
+title: "Growth and Remodelling Package in FEniCSx"
+version: 1.0.0
+date-released: "2025-01-15"
+url: "https://github.com/karlfm/Growth-and-Remodeling-in-FEniCSx"
+preferred-citation:
+  type: conference-paper
+  title: "Growth and Remodelling Package in FEniCSx"
+  editors:
+    - family-names: Dokken
+      given-names: Jørgen S.
+    - family-names: Finsberg
+      given-names: Henrik N
+    - family-names: Hale
+      given-names: Jack S.
+    - family-names: Rognes
+      given-names: Marie E.
+    - family-names: Scroggs
+      given-names: Matthew W.
+  conference:
+    name: "FEniCS 2024 Conference"
+    location: "Simula Research Laboratory, Oslo, Norway"
+  start: 51
+  end: 61
+  doi: "10.1007/978-3-032-17396-6_5"
+  year: 2026
+  authors:
+    - family-names: "Munthe"
+      given-names: "Karl"
+    - family-names: "Finsberg"
+      given-names: "Henrik"
+      orcid: "https://orcid.org/0000-0003-3766-2393"
+    - family-names: "Wall"
+      given-names: "Samuel T."
+    - family-names: "Sundnes"
+      given-names: "Joakim"
